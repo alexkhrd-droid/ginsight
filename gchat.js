@@ -1,3 +1,4 @@
+<script type="module">
 import { firebaseApp } from './gconfig.js';
 import { getAI, getGenerativeModel, GoogleAIBackend } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-ai.js';
 
@@ -23,19 +24,19 @@ try {
   });
 }
 
-// System instruction for legal assistant
+// System instruction
 const SYSTEM_INSTRUCTION = `
 You are a helpful and approachable legal assistant for U.S. law.
 - Speak like a real consultant, not like an encyclopedia or Wikipedia.
 - Give concise, practical answers (3–6 sentences).
 - Use plain American English, simple and friendly.
 - Format answers in a clear and human style: use emojis, bullet points and short paragraphs for readability.
+- If the user asks you for personal legal advice (like a real lawyer would give), always add this at the end of your response:
+"I recommend you consult a local attorney: <a href='https://www.findlaw.com/' target='_blank'>Find a Lawyer</a>"
 `;
 
-// Store chat history (user + assistant messages)
-const conversationHistory = [
-  { role: "system", content: SYSTEM_INSTRUCTION }
-];
+// Track assistant message count
+let assistantMessageCount = 0;
 
 // Function to send message with streaming
 async function sendMessage() {
@@ -58,9 +59,7 @@ async function sendMessage() {
     return;
   }
 
-  // Add user message to UI + history
   appendMessage('You', inputValue);
-  conversationHistory.push({ role: "user", content: inputValue });
   userInput.value = '';
 
   // Show loading message
@@ -71,13 +70,8 @@ async function sendMessage() {
   document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
 
   try {
-    // Build full conversation string
-    const fullPrompt = conversationHistory
-      .map(m => `${m.role.toUpperCase()}: ${m.content}`)
-      .join('\n\n');
-
-    console.log('Sending request to Gemini with history, length:', fullPrompt.length);
-
+    const fullPrompt = `${SYSTEM_INSTRUCTION}\n\nUser query: ${inputValue}`;
+    console.log('Sending request to Gemini:', fullPrompt.substring(0, 100) + '...');
     const result = await model.generateContentStream(fullPrompt);
     let fullResponse = '';
     const responseElement = document.createElement('div');
@@ -92,11 +86,16 @@ async function sendMessage() {
       document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
     }
 
+    // Count assistant messages
+    assistantMessageCount++;
+
+    // Rule 2: Every 10th message, add disclaimer
+    if (assistantMessageCount % 10 === 0) {
+      fullResponse += `<br><br>⚖️ Reminder: For personalized legal help, please consult a local attorney: <a href="https://www.findlaw.com/" target="_blank">Find a Lawyer</a>`;
+      responseElement.innerHTML = `<strong>Assistant:</strong> ${fullResponse.replace(/\n/g, '<br>')}`;
+    }
+
     console.log('Streaming completed, response length:', fullResponse.length);
-
-    // Save assistant response to history
-    conversationHistory.push({ role: "assistant", content: fullResponse });
-
   } catch (error) {
     console.error('Error during streaming response:', {
       message: error.message,
@@ -127,23 +126,19 @@ function appendMessage(sender, message) {
 // Set up event listeners
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOMContentLoaded fired');
+
+  // Greeting message
+  appendMessage('Assistant', "Hey 👋 I'm your legal assistant. How can I help you today? ⚖️");
+
   const sendButton = document.getElementById('sendButton');
   const userInput = document.getElementById('userInput');
-  const chatBox = document.getElementById('chatBox');
-
-  // Auto greeting on open
-  const greeting = "Hey 👋 I'm your legal assistant. How can I help you today?";
-  appendMessage('Assistant', greeting);
-  conversationHistory.push({ role: "assistant", content: greeting });
-
   if (sendButton && userInput) {
     sendButton.addEventListener('click', () => {
       console.log('sendButton clicked');
       sendMessage();
     });
-    userInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault(); // avoid newline
+    userInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
         console.log('Enter pressed');
         sendMessage();
       }
@@ -153,6 +148,9 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('Elements not found:', { sendButton: !!sendButton, userInput: !!userInput });
   }
 });
+</script>
+
+
 
 
 
