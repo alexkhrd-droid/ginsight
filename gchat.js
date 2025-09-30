@@ -8,10 +8,10 @@ try {
   model = getGenerativeModel(ai, {
     model: "gemini-2.5-flash",
     safetySettings: [
-      { category: 1, threshold: 3 }, // HARM_CATEGORY_HARASSMENT
-      { category: 2, threshold: 3 }, // HARM_CATEGORY_HATE_SPEECH
-      { category: 3, threshold: 3 }, // HARM_CATEGORY_SEXUALLY_EXPLICIT
-      { category: 4, threshold: 3 }  // HARM_CATEGORY_DANGEROUS_CONTENT
+      { category: "HARM_CATEGORY_HARASSMENT", threshold: 3 },
+      { category: "HARM_CATEGORY_HATE_SPEECH", threshold: 3 },
+      { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: 3 },
+      { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: 3 }
     ]
   });
   console.log('Gemini AI model initialized successfully');
