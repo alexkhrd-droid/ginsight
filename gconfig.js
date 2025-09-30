@@ -11,7 +11,7 @@ const firebaseConfig = {
 // Initialize Firebase
 let firebaseApp;
 try {
-  firebaseApp = firebase.initializeApp(firebaseConfig);
+  firebaseApp = initializeApp(firebaseConfig);
   console.log('Firebase initialized successfully');
 } catch (error) {
   console.error('Error initializing Firebase:', {
@@ -20,3 +20,6 @@ try {
     details: error.details || 'No details available'
   });
 }
+
+// Export for use in other modules
+export { firebaseApp };
