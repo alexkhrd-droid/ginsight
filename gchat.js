@@ -31,7 +31,6 @@ You are a helpful and approachable legal assistant for U.S. law.
 - Use plain American English, simple and friendly.
 - Format answers in a clear and human style: use emojis, bullet points and short paragraphs for readability.
 - Stay focused only on the user's legal question, avoid unnecessary background or history.
-- If the question is not about law, politely say you only provide legal help.
 `;
 
 // Store chat history (user + assistant messages)
