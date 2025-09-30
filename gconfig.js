@@ -1,11 +1,14 @@
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js';
+
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCD11Bm8Z38U3lApRTgbSw-m-9tV4boaqM",
-  authDomain: "new-blog-ea837.firebaseapp.com",
-  projectId: "new-blog-ea837",
-  storageBucket: "new-blog-ea837.firebasestorage.app",
-  messagingSenderId: "833721509241",
-  appId: "1:833721509241:web:3a1be95a13170236c6bba8"
+  apiKey: "AIzaSyD1Ju-LnljEjtshj2WggwHbAZaccmQK-IY",
+  authDomain: "gvins-c3767.firebaseapp.com",
+  projectId: "gvins-c3767",
+  storageBucket: "gvins-c3767.firebasestorage.app",
+  messagingSenderId: "1050780679115",
+  appId: "1:1050780679115:web:59426955ffb7c9a124944e",
+  measurementId: "G-L57W36XTLZ"
 };
 
 // Initialize Firebase
