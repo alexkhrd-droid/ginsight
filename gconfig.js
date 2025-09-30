@@ -1,4 +1,4 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-app-compat.js';
 
  
 const firebaseConfig = {
@@ -11,7 +11,14 @@ const firebaseConfig = {
 };
 
  
-const firebaseApp = initializeApp(firebaseConfig);
+let firebaseApp;
+try {
+  firebaseApp = initializeApp(firebaseConfig);
+  console.log('Firebase успешно инициализирован');
+} catch (error) {
+  console.error('Ошибка инициализации Firebase:', error.message, error);
+  throw error;
+}
 
  
 export { firebaseApp };
