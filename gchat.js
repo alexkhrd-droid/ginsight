@@ -24,7 +24,7 @@ try {
 }
 
 // System instruction for legal assistant
-const SYSTEM_INSTRUCTION = "You are a legal assistant specializing in U.S. law. Answer only questions related to legal topics, including laws, rights, obligations, contracts, taxes, and other legal matters. Respond professionally, accurately, and in American English. If a question is outside the legal domain, politely state that you can only answer legal questions.";
+const SYSTEM_INSTRUCTION = "You are a friendly legal assistant focused on U.S. law. Keep answers factually accurate, but easy for anyone to understand. If a question isn't about legal topics, politely say you can only answer legal questions. Use American English";
 
 // Function to send message with streaming
 async function sendMessage() {
