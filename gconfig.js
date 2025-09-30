@@ -1,20 +1,24 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js';
+import { getAnalytics } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js';
 
-// Firebase configuration
+// Firebase configuration (новые настройки)
 const firebaseConfig = {
-  apiKey: "AIzaSyD1Ju-LnljEjtshj2WggwHbAZaccmQK-IY",
-  authDomain: "gvins-c3767.firebaseapp.com",
-  projectId: "gvins-c3767",
-  storageBucket: "gvins-c3767.firebasestorage.app",
-  messagingSenderId: "1050780679115",
-  appId: "1:1050780679115:web:59426955ffb7c9a124944e",
-  measurementId: "G-L57W36XTLZ"
+  apiKey: "AIzaSyCnTbwjQtFwf3oJWFv_YtMAXeB-yS9GKNY",
+  authDomain: "ginsight-5befe.firebaseapp.com",
+  projectId: "ginsight-5befe",
+  storageBucket: "ginsight-5befe.firebasestorage.app",
+  messagingSenderId: "664577526903",
+  appId: "1:664577526903:web:e6cae5721dad683f490a72",
+  measurementId: "G-JTFHWBPF61"
 };
 
 // Initialize Firebase
 let firebaseApp;
+let analytics;
+
 try {
   firebaseApp = initializeApp(firebaseConfig);
+  analytics = getAnalytics(firebaseApp);
   console.log('Firebase initialized successfully');
 } catch (error) {
   console.error('Error initializing Firebase:', {
@@ -25,4 +29,5 @@ try {
 }
 
 // Export for use in other modules
-export { firebaseApp };
+export { firebaseApp, analytics };
+
