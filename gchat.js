@@ -24,7 +24,7 @@ try {
 }
 
 // System instruction for legal assistant
-const SYSTEM_INSTRUCTION = "You are a legal assistant. Answer only questions related to legal topics, including laws, rights, obligations, contracts, taxes, and other legal matters. Respond professionally, accurately, and in Russian. If a question is outside the legal domain, politely state that you can only answer legal questions.";
+const SYSTEM_INSTRUCTION = "You are a legal assistant specializing in U.S. law. Answer only questions related to legal topics, including laws, rights, obligations, contracts, taxes, and other legal matters. Respond professionally, accurately, and in American English. If a question is outside the legal domain, politely state that you can only answer legal questions.";
 
 // Function to send message with streaming
 async function sendMessage() {
@@ -50,6 +50,13 @@ async function sendMessage() {
   appendMessage('You', inputValue);
   userInput.value = '';
 
+  // Show loading message
+  const loadingElement = document.createElement('div');
+  loadingElement.className = 'assistant-message';
+  loadingElement.innerHTML = '<strong>Assistant:</strong> Please wait, processing your request...';
+  document.getElementById('chatBox').appendChild(loadingElement);
+  document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
+
   try {
     const fullPrompt = `${SYSTEM_INSTRUCTION}\n\nUser query: ${inputValue}`;
     console.log('Sending request to Gemini:', fullPrompt.substring(0, 100) + '...');
@@ -58,7 +65,7 @@ async function sendMessage() {
     const responseElement = document.createElement('div');
     responseElement.className = 'assistant-message';
     responseElement.innerHTML = '<strong>Assistant:</strong> ';
-    document.getElementById('chatBox').appendChild(responseElement);
+    document.getElementById('chatBox').replaceChild(responseElement, loadingElement);
 
     for await (const chunk of result.stream) {
       const chunkText = chunk.text();
@@ -74,6 +81,7 @@ async function sendMessage() {
       details: error.details || 'No details available',
       stack: error.stack
     });
+    document.getElementById('chatBox').removeChild(loadingElement);
     appendMessage('Assistant', `Error: ${error.message || 'Unknown error'}. Check console for details.`);
   }
 }
