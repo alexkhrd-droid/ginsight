@@ -1,29 +1,29 @@
-import { firebaseApp } from 'https://cdn.jsdelivr.net/gh/alexkhrd-droid/ginsight@main/gconfig.js';
-import { getAI, getGenerativeModel, GoogleAIBackend } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-ai-compat.js';
 // Initialize AI Logic
 let ai, model;
 try {
-  ai = getAI(firebaseApp, { backend: new GoogleAIBackend() });
-  model = getGenerativeModel(ai, {
+  ai = firebase.ai.getAI({ backend: new firebase.ai.GoogleAIBackend() });
+  model = firebase.ai.getGenerativeModel(ai, {
     model: "gemini-2.5-flash",
     safetySettings: [
       { category: 1, threshold: 3 }, // HARM_CATEGORY_HARASSMENT
       { category: 2, threshold: 3 }, // HARM_CATEGORY_HATE_SPEECH
       { category: 3, threshold: 3 }, // HARM_CATEGORY_SEXUALLY_EXPLICIT
-      { category: 4, threshold: 3 } // HARM_CATEGORY_DANGEROUS_CONTENT
+      { category: 4, threshold: 3 }  // HARM_CATEGORY_DANGEROUS_CONTENT
     ]
   });
-  console.log('Gemini AI model initialized');
+  console.log('Gemini AI model initialized successfully');
 } catch (error) {
-  console.error('Gemini AI initialization error:', {
+  console.error('Error initializing Gemini AI:', {
     message: error.message,
     code: error.code,
-    details: error.details || 'No details'
+    details: error.details || 'No details available'
   });
 }
-// System instruction
-const SYSTEM_INSTRUCTION = "You are a legal assistant. Respond only to questions related to legal topics, including laws, rights, obligations, contracts, taxes, and other legal matters. Answer professionally, accurately, and in Russian. If the question is outside the scope of legal topics, politely state that you can only respond to legal questions.";
-// Function to send message
+
+// System instruction for legal assistant
+const SYSTEM_INSTRUCTION = "You are a legal assistant. Answer only questions related to legal topics, including laws, rights, obligations, contracts, taxes, and other legal matters. Respond professionally, accurately, and in Russian. If a question is outside the legal domain, politely state that you can only answer legal questions.";
+
+// Function to send message with streaming
 async function sendMessage() {
   console.log('sendMessage called');
   const userInput = document.getElementById('userInput');
@@ -40,11 +40,13 @@ async function sendMessage() {
   }
   if (!model) {
     console.error('AI model not initialized');
-    appendMessage('Assistant', 'Error: AI is not available. Check the browser console.');
+    appendMessage('Assistant', 'Error: AI not available. Check browser console.');
     return;
   }
+
   appendMessage('You', inputValue);
   userInput.value = '';
+
   try {
     const fullPrompt = `${SYSTEM_INSTRUCTION}\n\nUser query: ${inputValue}`;
     console.log('Sending request to Gemini:', fullPrompt.substring(0, 100) + '...');
@@ -54,6 +56,7 @@ async function sendMessage() {
     responseElement.className = 'assistant-message';
     responseElement.innerHTML = '<strong>Assistant:</strong> ';
     document.getElementById('chatBox').appendChild(responseElement);
+
     for await (const chunk of result.stream) {
       const chunkText = chunk.text();
       fullResponse += chunkText;
@@ -62,16 +65,17 @@ async function sendMessage() {
     }
     console.log('Streaming completed, response length:', fullResponse.length);
   } catch (error) {
-    console.error('Error during response streaming:', {
+    console.error('Error during streaming response:', {
       message: error.message,
       code: error.code,
-      details: error.details || 'No details',
+      details: error.details || 'No details available',
       stack: error.stack
     });
-    appendMessage('Assistant', `Error: ${error.message || 'Unknown error'}. Check the console for details.`);
+    appendMessage('Assistant', `Error: ${error.message || 'Unknown error'}. Check console for details.`);
   }
 }
-// Function to append messages
+
+// Function to append messages to chat
 function appendMessage(sender, message) {
   const chatBox = document.getElementById('chatBox');
   if (!chatBox) {
@@ -83,10 +87,12 @@ function appendMessage(sender, message) {
   messageElement.innerHTML = `<strong>${sender}:</strong> ${message.replace(/\n/g, '<br>')}`;
   chatBox.appendChild(messageElement);
   chatBox.scrollTop = chatBox.scrollHeight;
+  console.log(`Message appended: ${sender}: ${message}`);
 }
-// Event listeners
+
+// Set up event listeners
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('DOMContentLoaded triggered');
+  console.log('DOMContentLoaded fired');
   const sendButton = document.getElementById('sendButton');
   const userInput = document.getElementById('userInput');
   if (sendButton && userInput) {
@@ -100,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sendMessage();
       }
     });
-    console.log('Event listeners set');
+    console.log('Event listeners set up');
   } else {
     console.error('Elements not found:', { sendButton: !!sendButton, userInput: !!userInput });
   }
