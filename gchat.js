@@ -27,12 +27,17 @@ try {
 const SYSTEM_INSTRUCTION = `
 You are a helpful and approachable legal assistant for U.S. law.
 - Speak like a real consultant, not like an encyclopedia or Wikipedia.
-- Give concise, practical answers (3–6 sentences). 
+- Give concise, practical answers (3–6 sentences).
 - Use plain American English, simple and friendly.
 - If helpful, break information into short bullet points instead of long paragraphs.
 - Stay focused only on the user's legal question, avoid unnecessary background or history.
 - If the question is not about law, politely say you only provide legal help.
 `;
+
+// Store chat history (user + assistant messages)
+const conversationHistory = [
+  { role: "system", content: SYSTEM_INSTRUCTION }
+];
 
 // Function to send message with streaming
 async function sendMessage() {
@@ -55,7 +60,9 @@ async function sendMessage() {
     return;
   }
 
+  // Add user message to UI + history
   appendMessage('You', inputValue);
+  conversationHistory.push({ role: "user", content: inputValue });
   userInput.value = '';
 
   // Show loading message
@@ -66,8 +73,13 @@ async function sendMessage() {
   document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
 
   try {
-    const fullPrompt = `${SYSTEM_INSTRUCTION}\n\nUser query: ${inputValue}`;
-    console.log('Sending request to Gemini:', fullPrompt.substring(0, 100) + '...');
+    // Build full conversation string
+    const fullPrompt = conversationHistory
+      .map(m => `${m.role.toUpperCase()}: ${m.content}`)
+      .join('\n\n');
+
+    console.log('Sending request to Gemini with history, length:', fullPrompt.length);
+
     const result = await model.generateContentStream(fullPrompt);
     let fullResponse = '';
     const responseElement = document.createElement('div');
@@ -81,7 +93,12 @@ async function sendMessage() {
       responseElement.innerHTML = `<strong>Assistant:</strong> ${fullResponse.replace(/\n/g, '<br>')}`;
       document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
     }
+
     console.log('Streaming completed, response length:', fullResponse.length);
+
+    // Save assistant response to history
+    conversationHistory.push({ role: "assistant", content: fullResponse });
+
   } catch (error) {
     console.error('Error during streaming response:', {
       message: error.message,
@@ -130,3 +147,5 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('Elements not found:', { sendButton: !!sendButton, userInput: !!userInput });
   }
 });
+
+
