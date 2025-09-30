@@ -1,8 +1,11 @@
+import { firebaseApp } from './gconfig.js';
+import { getAI, getGenerativeModel, GoogleAIBackend } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-ai.js';
+
 // Initialize AI Logic
 let ai, model;
 try {
-  ai = firebase.ai.getAI({ backend: new firebase.ai.GoogleAIBackend() });
-  model = firebase.ai.getGenerativeModel(ai, {
+  ai = getAI(firebaseApp, { backend: new GoogleAIBackend() });
+  model = getGenerativeModel(ai, {
     model: "gemini-2.5-flash",
     safetySettings: [
       { category: 1, threshold: 3 }, // HARM_CATEGORY_HARASSMENT
