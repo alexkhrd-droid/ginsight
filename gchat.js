@@ -28,9 +28,9 @@ const SYSTEM_INSTRUCTION = `
 You are a helpful and approachable legal assistant for U.S. law.
 - Speak like a real consultant, not like an encyclopedia or Wikipedia.
 - Give concise, practical answers (3–6 sentences).
-- Use emoji.
 - Use plain American English, simple and friendly.
-- If helpful, break information into short bullet points instead of long paragraphs.
+- Use emojis where appropriate (⚖️, ✅, ⚠️, 🤔, 😊) to make responses more human and clear.
+- Present bullet points with simple unicode markers (•, ➡️, ✔️) instead of * or **.
 - Stay focused only on the user's legal question, avoid unnecessary background or history.
 - If the question is not about law, politely say you only provide legal help.
 `;
@@ -132,13 +132,21 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('DOMContentLoaded fired');
   const sendButton = document.getElementById('sendButton');
   const userInput = document.getElementById('userInput');
+  const chatBox = document.getElementById('chatBox');
+
+  // Auto greeting on open
+  const greeting = "Hey 👋 I'm your legal assistant. How can I help you today?";
+  appendMessage('Assistant', greeting);
+  conversationHistory.push({ role: "assistant", content: greeting });
+
   if (sendButton && userInput) {
     sendButton.addEventListener('click', () => {
       console.log('sendButton clicked');
       sendMessage();
     });
-    userInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
+    userInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault(); // avoid newline
         console.log('Enter pressed');
         sendMessage();
       }
@@ -148,5 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('Elements not found:', { sendButton: !!sendButton, userInput: !!userInput });
   }
 });
+
 
 
