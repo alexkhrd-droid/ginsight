@@ -1,4 +1,3 @@
-<script type="module">
 import { firebaseApp } from './gconfig.js';
 import { getAI, getGenerativeModel, GoogleAIBackend } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-ai.js';
 
@@ -148,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('Elements not found:', { sendButton: !!sendButton, userInput: !!userInput });
   }
 });
-</script>
+
 
 
 
