@@ -1,0 +1,55 @@
+/* Breadcrumb */
+.breadcrumb {
+  font-size: 0.875rem;
+  margin-bottom: 24px;
+  color: var(--color-text-light);
+  display: flex;
+  gap: 6px;
+}
+.breadcrumb a:hover {
+  color: var(--color-link);
+}
+
+/* Featured Image in Post */
+.post-featured-img {
+  width: 100%;
+  margin-bottom: 24px;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  background: var(--color-bg-grey);
+}
+
+/* Related Posts */
+.related-wrapper {
+  margin-top: 40px;
+}
+.related-title {
+  font-size: 1.25rem;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.related-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  padding-bottom: 12px;
+}
+.related-img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+.related-heading {
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 12px;
+}
+.related-date {
+  font-size: 0.75rem;
+  color: var(--color-text-light);
+  padding: 0 12px 12px;
+}
