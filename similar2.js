@@ -1,7 +1,7 @@
 // similar.js — Похожие посты по ВСЕМ меткам текущего поста
 // ВЕРСИЯ 2.0 - Совместима со всеми шаблонами Blogger
 
-const MAX_RELATED = 3;
+const MAX_RELATED = 4;
 const REQUEST_PER_LABEL = 6;
 
 let collectedPosts = [];
